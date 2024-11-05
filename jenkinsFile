@@ -43,6 +43,13 @@ pipeline {
         stage('Release') {
             steps {
                 echo 'Releasing'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'awsCredential',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]){
+                        sh(script: 'aws s3 cp s3://biz-takase-test-jenkins/src/ s3://biz-takase-prod-jenkins/src/')
+                }
             }
         }
     }
